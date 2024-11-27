@@ -5,7 +5,7 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      python: 3.7
+      python: 3.9
     commands:
       - echo 'about to call dockerd'
       - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://127.0.0.1:2375 --storage-driver=overlay2&
@@ -26,12 +26,10 @@ phases:
       - chmod +x ./kubectl ./aws-iam-authenticator      
       # - mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin
       - export PATH=$PWD/:$PATH  
-      - sudo add-apt-repository ppa:deadsnakes/ppa
-      - sudo apt install -y python3.11
       - python3 --version
       - echo 'export PATH=$PWD/:$PATH' >> $HOME/.bashrc
       - echo `kubectl version --short --client`
-      - curl https://bootstrap.pypa.io/pip/3.4/get-pip.py -o get-pip.py
+      - curl https://bootstrap.pypa.io/pip/3.9/get-pip.py -o get-pip.py
       - python3 get-pip.py
       - python3 -m pip install --upgrade --force pip
       - wget -qO- https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
