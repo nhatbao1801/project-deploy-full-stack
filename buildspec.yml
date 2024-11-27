@@ -29,6 +29,7 @@ phases:
       - python3 --version
       - echo 'export PATH=$PWD/:$PATH' >> $HOME/.bashrc
       - echo `kubectl version --short --client`
+      - sudo apt update
       - sudo apt install python3-pip
       - pip3 --version
       - python3 -m pip3 install --upgrade --force pip3
