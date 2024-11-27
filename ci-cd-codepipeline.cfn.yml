@@ -118,7 +118,7 @@ Resources:
         ZipFile: |
           import json
           import boto3
-          from botocore.vendored import requests
+          import urllib3
           def handler(event, context):
             response = {
               'Status': 'SUCCESS',
@@ -129,18 +129,23 @@ Resources:
               'LogicalResourceId': event['LogicalResourceId'],
               'Data': {"Message": "Resource creation successful!"},
             }
+          
+            http = urllib3.PoolManager()
             client = boto3.client('iam')
             try:
               if event['RequestType'] == 'Create':
                 kubectl_role_name = event['ResourceProperties']['KubectlRoleName']
                 build_role_arn = event['ResourceProperties']['CodeBuildServiceRoleArn']
+
                 assume = client.get_role(RoleName = kubectl_role_name)
                 assume_doc = assume['Role']['AssumeRolePolicyDocument']
                 roles = [ { 'Effect': 'Allow', 'Principal': { 'AWS': build_role_arn }, 'Action': 'sts:AssumeRole' } ]
+
                 for statement in assume_doc['Statement']:
                   if 'AWS' in statement['Principal']:
                     if statement['Principal']['AWS'].startswith('arn:aws:iam:'):
                       roles.append(statement)
+
                 assume_doc['Statement'] = roles
                 update_response = client.update_assume_role_policy(RoleName = kubectl_role_name, PolicyDocument = json.dumps(assume_doc))
             except Exception as e:
@@ -148,13 +153,18 @@ Resources:
               response['Status'] = 'FAILED'
               response["Reason"] = e
               response['Data'] = {"Message": "Resource creation failed"}
+
             response_body = json.dumps(response)
-            headers = {'content-type': '', "content-length": len(response_body) }
-            put_response = requests.put(event['ResponseURL'], headers=headers, data=response_body)
+            headers = {'Content-Type': 'application/json', "content-length": str(len(response_body)) }
+            put_response = http.request('PUT',
+                          event['ResponseURL'],
+                          body = response_body,
+                          headers=headers)
             return response
+
       Handler: index.handler
       Role: !GetAtt CustomResourceLambdaExecutionRole.Arn
-      Runtime: python2.7
+      Runtime: python3.9
       Timeout: 300
 
   CustomResourceLambdaExecutionRole:
@@ -317,6 +327,7 @@ Resources:
             Value: !Ref EksClusterName
           - Name: EKS_KUBECTL_ROLE_ARN
             Value: !Sub arn:aws:iam::${AWS::AccountId}:role/${KubectlRoleName}
+        PrivilegedMode: true
       Name: !Ref AWS::StackName
       ServiceRole: !GetAtt CodeBuildServiceRole.Arn
     DependsOn: KubectlAssumeRoleCustomResource
