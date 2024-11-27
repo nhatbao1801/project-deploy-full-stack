@@ -29,10 +29,10 @@ phases:
       - python3 --version
       - echo 'export PATH=$PWD/:$PATH' >> $HOME/.bashrc
       - echo `kubectl version --short --client`
-      - curl https://bootstrap.pypa.io/pip/3.4/get-pip.py -o get-pip.py
+      - curl https://bootstrap.pypa.io/pip/3.7/get-pip.py -o get-pip.py
       - python3 get-pip.py
       - python3 -m pip install --upgrade --force pip
-      - wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add
+      - wget -qO- https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
       - apt-get update && apt-get -y install jq  && pip install --upgrade awscli pytest
   pre_build:
     commands:
