@@ -30,7 +30,7 @@ phases:
       - echo 'export PATH=$PWD/:$PATH' >> $HOME/.bashrc
       - echo `kubectl version --short --client`
       - python -m pip install --upgrade --force pip
-      - curl -sSL https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+      - wget -qO- https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
       - apt-get update && apt-get -y install jq  && pip install --upgrade awscli pytest
   pre_build:
     commands:
