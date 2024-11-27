@@ -26,12 +26,10 @@ phases:
       - chmod +x ./kubectl ./aws-iam-authenticator      
       # - mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin
       - export PATH=$PWD/:$PATH  
-      - python3 --version
+      - python --version
       - echo 'export PATH=$PWD/:$PATH' >> $HOME/.bashrc
       - echo `kubectl version --short --client`
-      - curl https://bootstrap.pypa.io/pip/3.9/get-pip.py -o get-pip.py
-      - python3 get-pip.py
-      - python3 -m pip install --upgrade --force pip
+      - python -m pip install --upgrade --force pip
       - wget -qO- https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
       - apt-get update && apt-get -y install jq  && pip install --upgrade awscli pytest
   pre_build:
