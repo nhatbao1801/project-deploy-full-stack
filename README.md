@@ -88,4 +88,4 @@ Completing the project involves several steps:
 For more detail about each of these steps, see the project lesson.
 
 ## external IP 
-http://a9966c2e08c8c44e29d584c1b5c92d38-484170898.us-east-2.elb.amazonaws.com/
+  url:  http://a9966c2e08c8c44e29d584c1b5c92d38-484170898.us-east-2.elb.amazonaws.com/
