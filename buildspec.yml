@@ -32,7 +32,7 @@ phases:
       - python -m pip install --upgrade --force pip
       - wget https://dl.google.com/linux/linux_signing_key.pub
       - sudo apt-key add -v linux_signing_key.pub
-      - apt-get update && apt-get -y install jq  && pip install --upgrfade awscli pytest
+      - apt-get update && apt-get -y install jq  && pip install --upgrade awscli pytest
   pre_build:
     commands:
       - TAG="$REPOSITORY_NAME.$REPOSITORY_BRANCH.$ENVIRONMENT_NAME.$(date +%Y-%m-%d.%H.%M.%S).$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
